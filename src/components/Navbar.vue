@@ -101,12 +101,6 @@
             active-class="bg-white text-blue-600 font-semibold"
             >Profil</router-link
           >
-          <router-link
-            to="/about-me"
-            class="px-4 py-2 rounded-md hover:bg-blue-500 transition"
-            active-class="bg-white text-blue-600 font-semibold"
-            >About Me</router-link
-          >
 
           <a
             @click="handleLogout"

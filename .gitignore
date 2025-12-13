@@ -30,6 +30,6 @@ coverage
 *.tsbuildinfo
 
 # Supabase client config
-src/supabaseClient.js
+
 .env
 
