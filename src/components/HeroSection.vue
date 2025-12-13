@@ -1,27 +1,38 @@
 <template>
-  <section class="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 overflow-hidden py-12 sm:py-16 md:py-20 lg:py-24">
-    <!-- Background Decorations -->
+  <section
+    class="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 overflow-hidden py-12 sm:py-16 md:py-20 lg:py-24"
+  >
     <div class="absolute inset-0 overflow-hidden z-0">
-      <div class="absolute w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] lg:w-[500px] lg:h-[500px] bg-blue-500 rounded-full opacity-20 blur-[40px] sm:blur-[50px] lg:blur-[60px] -top-[150px] sm:-top-[200px] -right-[150px] sm:-right-[200px]"></div>
-      <div class="absolute w-[400px] h-[400px] sm:w-[500px] sm:h-[500px] lg:w-[600px] lg:h-[600px] bg-purple-500 rounded-full opacity-20 blur-[40px] sm:blur-[50px] lg:blur-[60px] top-[40%] -left-[200px] sm:-left-[250px]"></div>
-      <div class="absolute w-[250px] h-[250px] sm:w-[350px] sm:h-[350px] lg:w-[400px] lg:h-[400px] bg-indigo-500 rounded-full opacity-20 blur-[40px] sm:blur-[50px] lg:blur-[60px] bottom-[10%] right-[10%]"></div>
+      <div
+        class="absolute w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] lg:w-[500px] lg:h-[500px] bg-blue-500 rounded-full opacity-20 blur-[40px] sm:blur-[50px] lg:blur-[60px] -top-[150px] sm:-top-[200px] -right-[150px] sm:-right-[200px]"
+      ></div>
+      <div
+        class="absolute w-[400px] h-[400px] sm:w-[500px] sm:h-[500px] lg:w-[600px] lg:h-[600px] bg-purple-500 rounded-full opacity-20 blur-[40px] sm:blur-[50px] lg:blur-[60px] top-[40%] -left-[200px] sm:-left-[250px]"
+      ></div>
+      <div
+        class="absolute w-[250px] h-[250px] sm:w-[350px] sm:h-[350px] lg:w-[400px] lg:h-[400px] bg-indigo-500 rounded-full opacity-20 blur-[40px] sm:blur-[50px] lg:blur-[60px] bottom-[10%] right-[10%]"
+      ></div>
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center relative z-10">
-        <!-- Hero Content -->
+      <div
+        class="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center relative z-10"
+      >
         <div class="flex flex-col gap-4 sm:gap-5 lg:gap-6 text-center lg:text-left">
-          <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-800 leading-tight">
+          <h1
+            class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-800 leading-tight"
+          >
             Selamat datang di
-            <span class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent block sm:inline mt-2 sm:mt-0">
+            <span
+              class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent block sm:inline mt-2 sm:mt-0"
+            >
               ScanBar
             </span>
           </h1>
-
           <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-            Scan barcode pada kemasan makanan & minuman untuk mendapatkan informasi nutrisi lengkap. Pantau asupan harian dengan mudah dan capai target kesehatan Anda.
+            Scan barcode pada kemasan makanan & minuman untuk mendapatkan informasi nutrisi lengkap.
+            Pantau asupan harian dengan mudah dan capai target kesehatan Anda.
           </p>
-
           <div class="flex gap-3 sm:gap-4 flex-wrap justify-center lg:justify-start">
             <button
               @click="$emit('scroll-to-scanner')"
@@ -30,7 +41,6 @@
               <span class="hidden xs:inline">Mulai Pindai Sekarang</span>
               <span class="xs:hidden">Pindai Sekarang</span>
             </button>
-
             <router-link
               v-if="!isAuthenticated"
               to="/register"
@@ -42,26 +52,25 @@
           </div>
         </div>
 
-        <!-- Hero Image -->
         <div class="relative mt-8 lg:mt-0">
-          <!-- Mobile & Tablet Image (visible on small screens) -->
           <div class="block lg:hidden relative">
             <img
-              src="https://flexypack.com/wp-content/uploads/2021/11/Contoh-Kemasan-Standing-Pouch-Snack-Makanan-Ringan-1024x627.jpg"
-              alt="Barcode scanning"
+              :src="heroImage"
+              alt="ScanBar Healthy Food"
               class="w-full h-[250px] sm:h-[350px] md:h-[400px] object-cover rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl mx-auto max-w-md md:max-w-lg"
             />
           </div>
 
-          <!-- Desktop Image (hidden on small screens) -->
           <div class="hidden lg:block relative">
             <div class="relative z-10">
               <img
-                src="https://flexypack.com/wp-content/uploads/2021/11/Contoh-Kemasan-Standing-Pouch-Snack-Makanan-Ringan-1024x627.jpg"
-                alt="Barcode scanning"
+                :src="heroImage"
+                alt="ScanBar Healthy Food"
                 class="w-full h-[400px] xl:h-[500px] object-cover rounded-3xl shadow-2xl"
               />
-              <div class="absolute top-8 -left-8 w-32 h-32 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl opacity-20 blur-[40px]"></div>
+              <div
+                class="absolute top-8 -left-8 w-32 h-32 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl opacity-20 blur-[40px]"
+              ></div>
             </div>
           </div>
         </div>
@@ -71,11 +80,13 @@
 </template>
 
 <script setup>
+import heroImage from '@/assets/hero_image.jpg'
+
 defineProps({
   isAuthenticated: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 
 defineEmits(['scroll-to-scanner'])
