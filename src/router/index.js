@@ -11,95 +11,86 @@ import ResetPasswordView from '../views/ResetPasswordView.vue'
 import PhotoScanView from '../views/PhotoScan.vue'
 import AdminDashboardView from '../views/AdminDashboard.vue'
 import AdminAddProductView from '@/views/AdminAddProductView.vue'
-import AdminTrashView from '@/views/AdminTrashView.vue';
-import CvView from '@/views/cvView.vue'
+import AdminTrashView from '@/views/AdminTrashView.vue'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: HomeView
+    component: HomeView,
   },
   {
     path: '/login',
     name: 'Login',
     component: LoginView,
-    meta: { guest: true } // Hanya untuk user yang belum login
+    meta: { guest: true }, // Hanya untuk user yang belum login
   },
   {
     path: '/register',
     name: 'Register',
     component: RegisterView,
-    meta: { guest: true } // Hanya untuk user yang belum login
+    meta: { guest: true }, // Hanya untuk user yang belum login
   },
   {
     path: '/forgot-password',
     name: 'ForgotPassword',
     component: ForgotPasswordView,
-    meta: { guest: true }
+    meta: { guest: true },
   },
   {
     path: '/reset-password',
     name: 'ResetPassword',
-    component: ResetPasswordView
+    component: ResetPasswordView,
   },
   {
     path: '/dashboard',
     name: 'Dashboard',
     component: DashboardView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
     path: '/calculator',
     name: 'Calculator',
     component: CalculatorView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
     path: '/photo-scan',
     name: 'PhotoScan',
     component: PhotoScanView,
-    meta: { requiresAuth: true } // Butuh login untuk simpan ke jurnal
+    meta: { requiresAuth: true }, // Butuh login untuk simpan ke jurnal
   },
   {
     path: '/profile',
     name: 'Profile',
     component: ProfileView,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/about-me',
-    name: 'AboutMe',
-    component: CvView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
     path: '/admin',
     name: 'AdminDashboard',
     component: AdminDashboardView,
-    meta: { requiresAuth: true, requiresAdmin: true }
+    meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
-  path: '/admin/add-product',
-  name: 'AdminAddProduct',
-  component: AdminAddProductView,
-  meta: { requiresAuth: true, requiresAdmin: true }
-},
+    path: '/admin/add-product',
+    name: 'AdminAddProduct',
+    component: AdminAddProductView,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
 
   {
     path: '/admin/trash',
     name: 'AdminTrash',
     component: AdminTrashView,
-    meta: { requiresAuth: true, requiresAdmin: true }
-  }
-
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
 ]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+  routes,
 })
-
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
@@ -110,9 +101,9 @@ router.beforeEach(async (to, from, next) => {
     await authStore.checkSession()
   }
 
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
-  const isGuestRoute = to.matched.some(record => record.meta.guest)
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
+  const requiresAdmin = to.matched.some((record) => record.meta.requiresAdmin)
+  const isGuestRoute = to.matched.some((record) => record.meta.guest)
   const isAuthenticated = authStore.isAuthenticated
 
   console.log('🔍 Router Guard:', {
@@ -122,7 +113,7 @@ router.beforeEach(async (to, from, next) => {
     isAdmin: authStore.isAdmin,
     role: authStore.role,
     requiresAdmin,
-    isProfileLoaded: authStore.isProfileLoaded
+    isProfileLoaded: authStore.isProfileLoaded,
   })
 
   // Cek Rute Khusus Admin
@@ -161,7 +152,7 @@ router.beforeEach(async (to, from, next) => {
     console.log('❌ Butuh auth, redirect ke login')
     next({
       name: 'Login',
-      query: { redirect: to.fullPath }
+      query: { redirect: to.fullPath },
     })
     return
   }
