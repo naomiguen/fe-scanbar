@@ -23,13 +23,13 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: LoginView,
-    meta: { guest: true }, // Hanya untuk user yang belum login
+    meta: { guest: true },
   },
   {
     path: '/register',
     name: 'Register',
     component: RegisterView,
-    meta: { guest: true }, // Hanya untuk user yang belum login
+    meta: { guest: true },
   },
   {
     path: '/forgot-password',
@@ -58,7 +58,7 @@ const routes = [
     path: '/photo-scan',
     name: 'PhotoScan',
     component: PhotoScanView,
-    meta: { requiresAuth: true }, // Butuh login untuk simpan ke jurnal
+    meta: { requiresAuth: true },
   },
   {
     path: '/profile',
@@ -78,7 +78,6 @@ const routes = [
     component: AdminAddProductView,
     meta: { requiresAuth: true, requiresAdmin: true },
   },
-
   {
     path: '/admin/trash',
     name: 'AdminTrash',
@@ -95,10 +94,13 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
 
-  // Selalu cek session jika user ada DAN profile belum di-load
+  // NON-BLOCKING: Load profile di background tanpa await
   if (authStore.user && !authStore.isProfileLoaded) {
-    console.log('⏳ Menunggu profile di-load...')
-    await authStore.checkSession()
+    console.log('Loading profile in background...')
+    authStore.fetchUserProfile().catch((err) => {
+      console.error('Background profile load failed:', err)
+    })
+    // TIDAK PAKAI AWAIT - biarkan navigation lanjut!
   }
 
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
@@ -106,67 +108,49 @@ router.beforeEach(async (to, from, next) => {
   const isGuestRoute = to.matched.some((record) => record.meta.guest)
   const isAuthenticated = authStore.isAuthenticated
 
-  console.log('🔍 Router Guard:', {
+  console.log('Router Guard:', {
     to: to.name,
     from: from.name,
     isAuthenticated,
     isAdmin: authStore.isAdmin,
     role: authStore.role,
-    requiresAdmin,
-    isProfileLoaded: authStore.isProfileLoaded,
   })
 
-  // Cek Rute Khusus Admin
+  // Check admin routes
   if (requiresAdmin) {
-    console.log('🔐 Checking admin access...')
+    console.log(' Checking admin access...')
 
-    // Kalau belum login, suruh login dulu
     if (!isAuthenticated) {
-      console.log('❌ Admin route: User belum login')
+      console.log('Not authenticated, redirect to login')
       next({ name: 'Login', query: { redirect: to.fullPath } })
       return
     }
 
-    // Tunggu profile loaded dulu sebelum cek isAdmin
-    if (!authStore.isProfileLoaded) {
-      console.log('⏳ Admin route: Menunggu profile loaded...')
-      await authStore.fetchUserProfile()
-    }
-
-    console.log('👤 Final check - isAdmin:', authStore.isAdmin, 'role:', authStore.role)
-
-    // Kalau sudah login TAPI BUKAN ADMIN → Tendang ke Dashboard biasa
+    // Check role dari store (sudah ada dari Supabase session)
     if (!authStore.isAdmin) {
-      console.warn('⛔ Akses Ditolak: User biasa mencoba masuk Admin Panel')
+      console.warn('Access Denied: Not an admin')
       next({ name: 'Dashboard' })
       return
     }
 
-    console.log('✅ Admin akses diberikan - allowing navigation')
+    console.log('Admin access granted')
     next()
     return
   }
 
-  // Jika route butuh auth tapi user belum login → redirect ke login
+  // Check auth requirement
   if (requiresAuth && !isAuthenticated) {
-    console.log('❌ Butuh auth, redirect ke login')
-    next({
-      name: 'Login',
-      query: { redirect: to.fullPath },
-    })
+    console.log('Auth required, redirect to login')
+    next({ name: 'Login', query: { redirect: to.fullPath } })
     return
   }
 
-  // Jika route untuk guest (login/register) tapi user sudah login → redirect ke dashboard
+  // Check guest routes (login/register when already logged in)
   if (isGuestRoute && isAuthenticated) {
-    console.log('✅ Sudah login, redirect ke dashboard yang sesuai')
+    console.log('Already authenticated, redirect to dashboard')
 
-    // Tunggu profile loaded dulu
-    if (!authStore.isProfileLoaded) {
-      await authStore.fetchUserProfile()
-    }
-
-    if (authStore.isAdmin) {
+    // Langsung redirect berdasarkan role yang ada
+    if (authStore.role === 'admin') {
       next({ name: 'AdminDashboard' })
     } else {
       next({ name: 'Dashboard' })
