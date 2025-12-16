@@ -1,4 +1,47 @@
 <template>
+  <!-- Pop-up Success Modal -->
+  <transition name="modal-fade">
+    <div
+      v-if="showSuccessModal"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 px-4"
+      @click="closeSuccessModal"
+    >
+      <div
+        class="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl transform animate-scale-in"
+        @click.stop
+      >
+        <!-- Success Icon with animation -->
+        <div
+          class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce-in"
+        >
+          <svg
+            class="w-10 h-10 text-green-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="3"
+              d="M5 13l4 4L19 7"
+            ></path>
+          </svg>
+        </div>
+
+        <h2 class="text-2xl font-bold text-slate-800 mb-3">Login Berhasil!</h2>
+        <p class="text-slate-600 mb-6">Selamat datang kembali di ScanBar</p>
+
+        <button
+          @click="closeSuccessModal"
+          class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300"
+        >
+          Lanjutkan
+        </button>
+      </div>
+    </div>
+  </transition>
+
   <!-- Container Utama - Full height dengan padding untuk navbar -->
   <div class="flex flex-col items-center justify-center min-h-screen bg-slate-50 px-4 pt-18 pb-8">
     <!-- Card Login -->
@@ -43,12 +86,12 @@
               v-model="password"
               placeholder="Masukkan password"
               required
-              class="w-full px-4 py-3 pr-12 border-2 border-slate-200 rounded-xl text-base focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 transition-all duration-300"
+              class="w-full px-4 py-3 pr-12 border-2 border-slate-200 rounded-xl text-base focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 transition-all duration-300 password-input"
             />
             <button
               type="button"
               @click="showPassword = !showPassword"
-              class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700 transition-colors p-1"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700 transition-colors p-1 z-10"
               aria-label="Toggle password visibility"
             >
               <!-- Icon Mata Terbuka -->
@@ -150,16 +193,25 @@ import { toast } from 'vue-sonner'
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
+const showSuccessModal = ref(false)
 const authStore = useAuthStore()
 const router = useRouter()
 const isLoading = ref(false)
 const errorMessage = ref(null)
 
 /**
+ * Fungsi untuk menutup modal sukses dan redirect
+ */
+const closeSuccessModal = () => {
+  showSuccessModal.value = false
+  router.push('/')
+}
+
+/**
  * Fungsi untuk menangani proses login
  * - Validasi input tidak boleh kosong
  * - Panggil authStore.login dengan credentials
- * - Jika berhasil: tampilkan toast sukses dan redirect ke home
+ * - Jika berhasil: tampilkan modal sukses
  * - Jika gagal: tampilkan pesan error
  */
 const handleLogin = async () => {
@@ -182,14 +234,13 @@ const handleLogin = async () => {
     })
 
     if (success) {
-      // Login berhasil: tampilkan notifikasi toast
-      toast.success('Login Berhasil!', {
-        description: 'Selamat datang kembali!',
-        duration: 1500,
-      })
+      // Login berhasil: tampilkan modal sukses
+      showSuccessModal.value = true
 
-      // Redirect ke home setelah login berhasil
-      // router.push('/')
+      // Auto redirect setelah 2 detik
+      setTimeout(() => {
+        closeSuccessModal()
+      }, 2000)
     } else {
       // Login gagal: tampilkan pesan error
       errorMessage.value = 'Email atau password salah. Silakan coba lagi.'
@@ -248,5 +299,77 @@ input:focus {
 /* Hover effect untuk links  */
 a {
   transition: all 0.3s ease;
+}
+
+/* Sembunyikan tombol show/hide password bawaan browser */
+.password-input::-ms-reveal,
+.password-input::-ms-clear {
+  display: none;
+}
+
+.password-input::-webkit-credentials-auto-fill-button,
+.password-input::-webkit-contacts-auto-fill-button {
+  visibility: hidden;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+}
+
+/* Untuk browser Webkit (Chrome, Safari, Edge baru) */
+input[type='password']::-webkit-credentials-auto-fill-button,
+input[type='password']::-webkit-contacts-auto-fill-button {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Untuk Internet Explorer dan Edge lama */
+input[type='password']::-ms-reveal,
+input[type='password']::-ms-clear {
+  display: none !important;
+}
+
+/* Modal Animations */
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+.animate-bounce-in {
+  animation: bounceIn 0.6s ease-out;
 }
 </style>

@@ -1,19 +1,23 @@
 <template>
   <header class="fixed top-0 left-0 right-0 bg-blue-600 text-white shadow-md z-50">
-    <div class="flex items-center justify-between px-6 py-7">
-      <div class="flex items-center space-x-3">
+    <div class="flex items-center justify-between px-4 py-4 md:px-6 md:py-7">
+      <div class="flex items-center space-x-2 md:space-x-3">
         <router-link to="/" class="flex items-center space-x-2">
-          <div class="bg-white text-blue-600 font-bold text-lg px-3 py-1 rounded-lg">SB</div>
-          <span class="font-semibold text-xl">ScanBar</span>
+          <div
+            class="bg-white text-blue-600 font-bold text-base md:text-lg px-2 py-1 md:px-3 rounded-lg"
+          >
+            SB
+          </div>
+          <span class="font-semibold text-lg md:text-xl">ScanBar</span>
         </router-link>
       </div>
 
       <!-- button menu untuk tampilan mobile -->
-      <button class="md:hidden focus:outline-none" @click="toggleMenu">
+      <button class="md:hidden focus:outline-none flex items-center" @click="toggleMenu">
         <svg
           v-if="!isMenuOpen"
           xmlns="http://www.w3.org/2000/svg"
-          class="h-7 w-7"
+          class="h-6 w-6 md:h-7 md:w-7"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -28,7 +32,7 @@
         <svg
           v-else
           xmlns="http://www.w3.org/2000/svg"
-          class="h-7 w-7"
+          class="h-6 w-6 md:h-7 md:w-7"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -115,7 +119,7 @@
     <transition name="slide-fade">
       <div
         v-if="isMenuOpen"
-        class="md:hidden bg-blue-600 border-t border-white/20 px-6 py-3 space-y-3 shadow-inner"
+        class="md:hidden bg-blue-600 border-t border-white/20 px-4 py-3 space-y-3 shadow-inner"
       >
         <router-link
           to="/"
