@@ -149,7 +149,7 @@
             class="block px-4 py-2 hover:bg-blue-500 rounded-md transition"
             active-class="bg-white text-blue-600 font-semibold"
             @click="closeMenu"
-            >Scan AI</router-link
+            >Scan Makanan</router-link
           >
           <router-link
             to="/profile"
