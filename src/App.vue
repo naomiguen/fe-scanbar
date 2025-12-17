@@ -6,6 +6,9 @@
   <main :class="{ 'pt-24': showUserNavbar }">
     <RouterView />
   </main>
+
+  <!-- Chatbot floating -->
+  <Chatbot />
 </template>
 
 <script setup>
@@ -13,6 +16,7 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { Toaster } from 'vue-sonner'
 import Navbar from '@/components/Navbar.vue'
+import Chatbot from '@/components/Chatbot.vue'
 
 const route = useRoute()
 
