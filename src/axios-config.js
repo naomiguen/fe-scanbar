@@ -43,7 +43,7 @@ const getSupabaseToken = () => {
   try {
     // Check if localStorage is available (browser environment)
     if (typeof window === 'undefined' || !window.localStorage) {
-      console.warn('⚠️ localStorage not available')
+      console.warn('localStorage not available')
       return null
     }
 
