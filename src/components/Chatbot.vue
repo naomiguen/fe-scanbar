@@ -31,8 +31,10 @@
         class="bg-gradient-to-br from-blue-500 to-blue-700 text-white p-4 flex items-center justify-between"
       >
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-xl">
-            🤖
+          <div
+            class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center text-sm font-bold shadow-md"
+          >
+            SB
           </div>
           <div>
             <h3 class="font-semibold text-base m-0">Scanbar Assistant</h3>
@@ -55,9 +57,14 @@
           :class="['flex gap-2 animate-slideIn', msg.role === 'user' ? 'flex-row-reverse' : '']"
         >
           <div
-            class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-lg self-start"
+            class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-xs font-bold self-start"
+            :class="
+              msg.role === 'user'
+                ? 'bg-gray-300 text-gray-700'
+                : 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-sm'
+            "
           >
-            {{ msg.role === 'user' ? '👤' : '🤖' }}
+            {{ msg.role === 'user' ? '👤' : 'SB' }}
           </div>
           <div
             :class="[
@@ -72,9 +79,9 @@
 
         <div v-if="loading" class="flex gap-2">
           <div
-            class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-lg self-start"
+            class="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0 text-xs font-bold self-start text-white shadow-sm"
           >
-            🤖
+            SB
           </div>
           <div class="bg-white p-3 rounded-xl shadow-sm flex gap-1">
             <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
@@ -197,7 +204,7 @@ export default {
         console.error('Error:', error)
         this.messages.push({
           role: 'assistant',
-          content: 'Maaf, terjadi kesalahan. Coba lagi ya! 😅',
+          content: 'Maaf, terjadi kesalahan. Coba lagi ya!',
         })
       } finally {
         this.loading = false
