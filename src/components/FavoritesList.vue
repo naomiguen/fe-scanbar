@@ -7,20 +7,23 @@
 
     <!-- Loading State -->
     <div v-if="isLoading" class="text-center py-12">
-      <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mb-4"></div>
+      <div
+        class="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mb-4"
+      ></div>
       <p class="text-lg text-slate-600">Memuat favorit...</p>
     </div>
 
     <!-- Empty State -->
     <div v-else-if="favorites.length === 0" class="text-center py-16">
       <p class="text-lg text-slate-700 font-medium mb-2">Belum ada produk favorit</p>
-      <p class="text-slate-500">
-        Bintangi produk dari halaman scan untuk akses cepat!
-      </p>
+      <p class="text-slate-500">Bintangi produk dari halaman scan untuk akses cepat!</p>
     </div>
 
     <!-- Grid Favorit -->
-    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+    <div
+      v-else
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+    >
       <div
         v-for="fav in favorites"
         :key="fav._id"
@@ -50,92 +53,179 @@
         <div class="grid grid-cols-2 gap-2 mb-4">
           <div class="bg-blue-100 rounded-xl p-2 text-center">
             <div class="text-lg font-bold text-blue-600">
-              {{ Math.round(
-                fav.product?.nutriments?.calories ||
-                fav.product?.nutriments?.['energy-kcal'] ||
-                fav.product?.nutriments?.['energy-kcal_100g'] ||
-                0
-              ) }}
+              {{
+                Math.round(
+                  fav.product?.nutriments?.calories ||
+                    fav.product?.nutriments?.['energy-kcal'] ||
+                    fav.product?.nutriments?.['energy-kcal_100g'] ||
+                    0
+                )
+              }}
             </div>
             <div class="text-xs font-medium text-blue-700">kcal</div>
           </div>
           <div class="bg-orange-100 rounded-xl p-2 text-center">
             <div class="text-lg font-bold text-orange-600">
-              {{ Math.round(
-                fav.product?.nutriments?.proteins ||
-                fav.product?.nutriments?.proteins_100g ||
-                0
-              ) }}g
+              {{
+                Math.round(
+                  fav.product?.nutriments?.proteins || fav.product?.nutriments?.proteins_100g || 0
+                )
+              }}g
             </div>
             <div class="text-xs font-medium text-orange-700">protein</div>
           </div>
         </div>
 
-        <!-- Tombol Quick Add -->
-        <button
-          @click="quickAdd(fav)"
-          :disabled="addingId === fav._id"
-          :class="[
-            'w-full py-3 px-4 rounded-xl font-bold transition-all duration-300 text-base flex items-center justify-center gap-2',
-            addingId === fav._id
-              ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
-              : 'bg-green-500 hover:bg-green-600 text-white hover:scale-105 shadow-md hover:shadow-lg'
-          ]"
-        >
-          <span v-if="addingId === fav._id">⏳</span>
-          <span v-else>➕</span>
-          <span>{{ addingId === fav._id ? 'Menambah...' : 'Tambah ke Jurnal' }}</span>
-        </button>
+        <!-- Tombol Actions -->
+        <div class="flex gap-2">
+          <!-- Tombol Quick Add -->
+          <button
+            @click="quickAdd(fav)"
+            :disabled="addingId === fav._id"
+            :class="[
+              'flex-1 py-3 px-3 rounded-xl font-bold transition-all duration-300 text-sm flex items-center justify-center gap-1.5',
+              addingId === fav._id
+                ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                : 'bg-green-500 hover:bg-green-600 text-white hover:scale-105 shadow-md hover:shadow-lg',
+            ]"
+          >
+            <span v-if="addingId === fav._id">⏳</span>
+            <span v-else>➕</span>
+            <span class="hidden sm:inline">{{
+              addingId === fav._id ? 'Menambah...' : 'Tambah'
+            }}</span>
+          </button>
+
+          <!-- Tombol Hapus Favorit -->
+          <button
+            @click="openDeleteModal(fav)"
+            :disabled="deletingId === fav._id"
+            :class="[
+              'py-3 px-4 rounded-xl font-bold transition-all duration-300 text-sm flex items-center justify-center gap-1.5',
+              deletingId === fav._id
+                ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                : 'bg-red-500 hover:bg-red-600 text-white hover:scale-105 shadow-md hover:shadow-lg',
+            ]"
+            :title="deletingId === fav._id ? 'Menghapus...' : 'Hapus dari Favorit'"
+          >
+            <span v-if="deletingId === fav._id">⏳</span>
+            <span v-else>🗑️</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Konfirmasi Hapus -->
+    <div
+      v-if="showDeleteModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      @click.self="closeDeleteModal"
+    >
+      <div
+        class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 md:p-8 transform transition-all"
+      >
+        <!-- Title -->
+        <h3 class="text-2xl font-bold text-slate-800 text-center mb-3">Hapus dari Favorit?</h3>
+
+        <!-- Product Info -->
+        <div v-if="selectedFavorite" class="bg-slate-50 rounded-xl p-4 mb-6">
+          <div class="flex items-center gap-3">
+            <img
+              v-if="
+                selectedFavorite.product?.image_small_url || selectedFavorite.product?.image_url
+              "
+              :src="selectedFavorite.product.image_small_url || selectedFavorite.product.image_url"
+              :alt="selectedFavorite.product.product_name"
+              class="w-16 h-16 object-contain rounded-lg"
+            />
+            <div class="flex-1">
+              <p class="font-bold text-slate-800 text-sm line-clamp-2">
+                {{ selectedFavorite.product?.product_name || 'Tanpa Nama' }}
+              </p>
+              <p class="text-xs text-slate-500">
+                {{ selectedFavorite.product?.brands || '-' }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <p class="text-slate-600 text-center mb-6">
+          Produk ini akan dihapus dari daftar favorit Anda.
+        </p>
+
+        <!-- Buttons -->
+        <div class="flex gap-3">
+          <button
+            @click="closeDeleteModal"
+            class="flex-1 py-3 px-4 rounded-xl font-bold text-slate-700 bg-slate-200 hover:bg-slate-300 transition-all duration-300"
+          >
+            Batal
+          </button>
+          <button
+            @click="confirmDelete"
+            :disabled="deletingId === selectedFavorite?._id"
+            :class="[
+              'flex-1 py-3 px-4 rounded-xl font-bold transition-all duration-300',
+              deletingId === selectedFavorite?._id
+                ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                : 'bg-red-500 hover:bg-red-600 text-white hover:scale-105 shadow-md',
+            ]"
+          >
+            {{ deletingId === selectedFavorite?._id ? 'Menghapus...' : 'Ya, Hapus' }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import apiClient from '@/axios-config';
-import { useFoodStore } from '@/stores/food';
-import { toast } from 'vue-sonner';
+import { ref, onMounted } from 'vue'
+import apiClient from '@/axios-config'
+import { useFoodStore } from '@/stores/food'
+import { toast } from 'vue-sonner'
 
-const foodStore = useFoodStore();
+const foodStore = useFoodStore()
 
-const favorites = ref([]);
-const isLoading = ref(true);
-const addingId = ref(null);
+const favorites = ref([])
+const isLoading = ref(true)
+const addingId = ref(null)
+const deletingId = ref(null)
+const showDeleteModal = ref(false)
+const selectedFavorite = ref(null)
 
 // Fetch favorit saat komponen dimuat
 const fetchFavorites = async () => {
-  isLoading.value = true;
+  isLoading.value = true
   try {
-    // Gunakan apiClient yang sudah include token otomatis
-    const response = await apiClient.get('/api/favorites');
-    favorites.value = response.data.favorites;
+    const response = await apiClient.get('/api/favorites')
+    favorites.value = response.data.favorites
   } catch (error) {
-    console.error('Error fetching favorites:', error);
+    console.error('Error fetching favorites:', error)
 
-    // Handle error yang lebih spesifik
     if (error.response?.status === 401) {
       toast.error('Sesi berakhir', {
-        description: 'Silakan login kembali'
-      });
+        description: 'Silakan login kembali',
+      })
     } else {
       toast.error('Gagal memuat favorit', {
-        description: error.message || 'Terjadi kesalahan saat mengambil data favorit'
-      });
+        description: error.message || 'Terjadi kesalahan saat mengambil data favorit',
+      })
     }
   } finally {
-    isLoading.value = false;
+    isLoading.value = false
   }
-};
+}
 
 // Quick Add ke jurnal harian
 const quickAdd = async (fav) => {
   if (!fav.product) {
-    toast.error('Data produk tidak tersedia');
-    return;
+    toast.error('Data produk tidak tersedia')
+    return
   }
 
-  addingId.value = fav._id;
+  addingId.value = fav._id
 
   try {
     const foodData = {
@@ -147,35 +237,112 @@ const quickAdd = async (fav) => {
       fat: fav.product.nutriments?.fat_100g || 0,
       sugar: fav.product.nutriments?.sugars_100g || 0,
       salt: fav.product.nutriments?.salt_100g || 0,
-      imageUrl: fav.product.image_small_url || fav.product.image_url
-    };
+      imageUrl: fav.product.image_small_url || fav.product.image_url,
+    }
 
-    console.log('📦 Calling foodStore.addFood with:', foodData);
+    console.log('Calling foodStore.addFood with:', foodData)
 
-    // Call addFood - ini function tidak throw error, jadi kita langsung panggil toast
-    await foodStore.addFood(foodData);
+    await foodStore.addFood(foodData)
 
-    // PINDAHKAN TOAST KE SINI - akan selalu dipanggil setelah addFood selesai
-    console.log('✅ addFood completed, showing toast');
+    console.log('addFood completed, showing toast')
 
     toast.success('Berhasil Ditambahkan!', {
-      description: `${foodData.productName} dengan ${Math.round(foodData.calories)} kalori telah disimpan ke jurnal harian Anda`,
-      duration: 4000
-    });
-
+      description: `${foodData.productName} dengan ${Math.round(
+        foodData.calories
+      )} kalori telah disimpan ke jurnal harian Anda`,
+      duration: 4000,
+    })
   } catch (error) {
-    console.error('❌ Error in quickAdd:', error);
+    console.error('Error in quickAdd:', error)
     toast.error('Gagal menambahkan ke jurnal', {
-      description: error.response?.data?.message || error.message || 'Terjadi kesalahan'
-    });
+      description: error.response?.data?.message || error.message || 'Terjadi kesalahan',
+    })
   } finally {
-    addingId.value = null;
+    addingId.value = null
   }
-};
+}
+
+// Hapus dari favorit
+const removeFavorite = async (fav) => {
+  if (!fav.productCode) {
+    toast.error('Kode produk tidak tersedia')
+    return
+  }
+
+  deletingId.value = fav._id
+
+  try {
+    // Panggil endpoint toggle favorit (akan menghapus karena sudah ada di favorit)
+    const response = await apiClient.post('/api/favorites', {
+      productCode: fav.productCode,
+    })
+
+    if (response.data.success && !response.data.isFavorited) {
+      // Hapus dari array lokal
+      favorites.value = favorites.value.filter((f) => f._id !== fav._id)
+
+      toast.success('Dihapus dari Favorit', {
+        description: `${fav.product?.product_name || 'Produk'} telah dihapus dari daftar favorit`,
+        duration: 3000,
+      })
+    }
+  } catch (error) {
+    console.error('Error removing favorite:', error)
+    toast.error('Gagal menghapus favorit', {
+      description: error.response?.data?.message || error.message || 'Terjadi kesalahan',
+    })
+  } finally {
+    deletingId.value = null
+  }
+}
+
+// Buka modal konfirmasi hapus
+const openDeleteModal = (fav) => {
+  selectedFavorite.value = fav
+  showDeleteModal.value = true
+}
+
+// Tutup modal
+const closeDeleteModal = () => {
+  showDeleteModal.value = false
+  selectedFavorite.value = null
+}
+
+// Konfirmasi hapus
+const confirmDelete = async () => {
+  if (!selectedFavorite.value) return
+
+  const fav = selectedFavorite.value
+  deletingId.value = fav._id
+
+  try {
+    const response = await apiClient.post('/api/favorites', {
+      productCode: fav.productCode,
+    })
+
+    if (response.data.success && !response.data.isFavorited) {
+      favorites.value = favorites.value.filter((f) => f._id !== fav._id)
+
+      toast.success('Dihapus dari Favorit', {
+        description: `${fav.product?.product_name || 'Produk'} telah dihapus dari daftar favorit`,
+        duration: 3000,
+      })
+    }
+
+    closeDeleteModal()
+  } catch (error) {
+    console.error('Error removing favorite:', error)
+    toast.error('Gagal menghapus favorit', {
+      description: error.response?.data?.message || error.message || 'Terjadi kesalahan',
+    })
+  } finally {
+    deletingId.value = null
+  }
+}
 
 onMounted(() => {
-  fetchFavorites();
-});
+  fetchFavorites()
+})
 </script>
 
 <style scoped>
