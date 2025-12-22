@@ -2,18 +2,14 @@
   <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-10 px-4">
     <!-- Header Utama Dashboard -->
     <div class="text-center mb-10">
-      <h1 class="text-4xl md:text-5xl font-extrabold text-blue-900 mb-2">
-        Dashboard Nutrisi
-      </h1>
-      <p class="text-lg text-slate-600">
-        Pantau konsumsi harian Anda
-      </p>
+      <h1 class="text-4xl md:text-5xl font-extrabold text-blue-900 mb-2">Dashboard Nutrisi</h1>
+      <p class="text-lg text-slate-600">Pantau konsumsi harian Anda</p>
     </div>
 
     <!-- Section Ringkasan Harian: Menampilkan progress bar untuk setiap nutrisi -->
     <div class="bg-white rounded-3xl shadow-xl p-6 md:p-8 mb-10 max-w-7xl mx-auto">
       <h2 class="text-2xl md:text-3xl font-bold text-blue-900 mb-6 flex items-center gap-2">
-      Ringkasan Harian
+        Ringkasan Harian
       </h2>
 
       <!-- Grid untuk menampilkan kartu-kartu nutrisi -->
@@ -43,7 +39,10 @@
 
           <!-- Sisa Nutrisi yang Masih Bisa Dikonsumsi -->
           <p class="text-sm text-slate-600">
-            Sisa: <span class="font-semibold">{{ Math.max(0, goal.max - goal.value) }} {{ goal.unit }}</span>
+            Sisa:
+            <span class="font-semibold"
+              >{{ Math.max(0, goal.max - goal.value) }} {{ goal.unit }}</span
+            >
           </p>
         </div>
       </div>
@@ -52,14 +51,12 @@
     <!-- Section Jurnal Makanan: Daftar semua makanan yang sudah dicatat hari ini -->
     <div class="bg-white rounded-3xl shadow-xl p-6 md:p-8 max-w-7xl mx-auto">
       <h2 class="text-2xl md:text-3xl font-bold text-blue-900 mb-6 flex items-center gap-2">
-      Jurnal Makanan Harian
+        Jurnal Makanan Harian
       </h2>
 
       <!-- Empty State: Ditampilkan jika belum ada makanan yang dicatat -->
       <div v-if="foodStore.foods.length === 0" class="text-center py-16">
-        <p class="text-lg text-slate-500">
-          Anda belum mencatat makanan apa pun hari ini.
-        </p>
+        <p class="text-lg text-slate-500">Anda belum mencatat makanan apa pun hari ini.</p>
       </div>
 
       <!-- Daftar Makanan: Ditampilkan jika sudah ada makanan yang dicatat -->
@@ -76,7 +73,12 @@
               {{ food.productName }}
             </h3>
             <span class="text-sm text-slate-600 font-medium">
-              {{ new Date(food.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) }}
+              {{
+                new Date(food.date).toLocaleTimeString('id-ID', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
+              }}
             </span>
           </div>
 
@@ -84,15 +86,12 @@
           <div class="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
             <!-- Grid untuk menampilkan semua nutrisi makanan -->
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 flex-1">
-
               <!-- Kartu Kalori -->
               <div class="bg-blue-100 rounded-xl p-3 text-center">
                 <div class="text-xl md:text-2xl font-bold text-blue-600">
                   {{ Math.round(food.calories) }}
                 </div>
-                <div class="text-xs font-medium text-blue-700 mt-1">
-                  kcal
-                </div>
+                <div class="text-xs font-medium text-blue-700 mt-1">kcal</div>
               </div>
 
               <!-- Kartu Karbohidrat -->
@@ -100,9 +99,7 @@
                 <div class="text-xl md:text-2xl font-bold text-green-600">
                   {{ Math.round(food.carbs) }}g
                 </div>
-                <div class="text-xs font-medium text-green-700 mt-1">
-                  karbo
-                </div>
+                <div class="text-xs font-medium text-green-700 mt-1">karbo</div>
               </div>
 
               <!-- Kartu Protein -->
@@ -110,9 +107,7 @@
                 <div class="text-xl md:text-2xl font-bold text-orange-600">
                   {{ Math.round(food.protein) }}g
                 </div>
-                <div class="text-xs font-medium text-orange-700 mt-1">
-                  protein
-                </div>
+                <div class="text-xs font-medium text-orange-700 mt-1">protein</div>
               </div>
 
               <!-- Kartu Lemak -->
@@ -120,9 +115,7 @@
                 <div class="text-xl md:text-2xl font-bold text-amber-600">
                   {{ Math.round(food.fat) }}g
                 </div>
-                <div class="text-xs font-medium text-amber-700 mt-1">
-                  lemak
-                </div>
+                <div class="text-xs font-medium text-amber-700 mt-1">lemak</div>
               </div>
 
               <!-- Kartu Gula -->
@@ -130,19 +123,15 @@
                 <div class="text-xl md:text-2xl font-bold text-purple-600">
                   {{ Math.round(food.sugar || 0) }}g
                 </div>
-                <div class="text-xs font-medium text-purple-700 mt-1">
-                  gula
-                </div>
+                <div class="text-xs font-medium text-purple-700 mt-1">gula</div>
               </div>
 
-              <!-- Kartu Garam (ditampilkan dalam mg) -->
+              <!-- Kartu Garam -->
               <div class="bg-slate-100 rounded-xl p-3 text-center">
                 <div class="text-xl md:text-2xl font-bold text-slate-600">
-                  {{ normalizeSaltDisplay(food.salt || 0).value }}{{ normalizeSaltDisplay(food.salt || 0).unit }}
+                  {{ Math.round(food.salt || 0) }}mg
                 </div>
-                <div class="text-xs font-medium text-slate-700 mt-1">
-                  garam
-                </div>
+                <div class="text-xs font-medium text-slate-700 mt-1">garam</div>
               </div>
             </div>
 
@@ -156,7 +145,6 @@
           </div>
         </div>
       </div>
-
     </div>
 
     <!-- Modal Konfirmasi Hapus: Ditampilkan sebagai overlay saat akan menghapus -->
@@ -168,15 +156,13 @@
       <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full animate-scale-in">
         <!-- Icon Warning -->
         <div class="text-center mb-6">
-          <h3 class="text-2xl font-bold text-slate-900 mb-2">
-            Hapus Makanan?
-          </h3>
+          <h3 class="text-2xl font-bold text-slate-900 mb-2">Hapus Makanan?</h3>
           <p class="text-slate-600">
-            Yakin ingin menghapus <span class="font-bold text-blue-900">{{ deleteConfirm.foodName }}</span> dari jurnal Anda?
+            Yakin ingin menghapus
+            <span class="font-bold text-blue-900">{{ deleteConfirm.foodName }}</span> dari jurnal
+            Anda?
           </p>
-          <p class="text-sm text-red-600 mt-2">
-            Tindakan ini tidak dapat dibatalkan.
-          </p>
+          <p class="text-sm text-red-600 mt-2">Tindakan ini tidak dapat dibatalkan.</p>
         </div>
 
         <!-- Tombol Aksi -->
@@ -202,18 +188,20 @@
       </div>
     </div>
 
-     <!-- Favorites -->
-      <FavoritesList class="mt-10"/>
+    <!-- Favorites -->
+    <FavoritesList class="mt-10" />
 
-  <!--  SECTION BARU: Analisis AI Harian -->
+    <!--  SECTION BARU: Analisis AI Harian -->
     <div class="bg-white rounded-3xl shadow-xl p-6 md:p-10 mb-10 mt-10 max-w-7xl mx-auto">
       <h2 class="text-2xl md:text-3xl font-bold text-blue-900 mb-6 flex items-center gap-2">
-      Analisis Jurnal Harian
+        Analisis Jurnal Harian
       </h2>
 
       <!-- Loading State -->
       <div v-if="foodStore.dailyAnalysisLoading" class="text-center py-12">
-        <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mb-4"></div>
+        <div
+          class="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mb-4"
+        ></div>
         <p class="text-lg text-slate-600">Menganalisis pola makan Anda...</p>
         <p class="text-sm text-slate-500 mt-2">Proses ini mungkin memakan waktu 5-10 detik</p>
       </div>
@@ -234,23 +222,26 @@
       <div v-else-if="foodStore.dailyAnalysis" class="space-y-6">
         <!-- Summary -->
         <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6">
-          <h3 class="text-xl font-bold text-blue-900 mb-3 flex items-center gap-2">
-          Ringkasan
-          </h3>
+          <h3 class="text-xl font-bold text-blue-900 mb-3 flex items-center gap-2">Ringkasan</h3>
           <p class="text-slate-700 leading-relaxed">
             {{ foodStore.dailyAnalysis.summary || 'Tidak ada ringkasan tersedia' }}
           </p>
         </div>
 
         <!-- Risks -->
-        <div v-if="foodStore.dailyAnalysis.risks && foodStore.dailyAnalysis.risks.length > 0"
-             class="bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl p-6">
+        <div
+          v-if="foodStore.dailyAnalysis.risks && foodStore.dailyAnalysis.risks.length > 0"
+          class="bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl p-6"
+        >
           <h3 class="text-xl font-bold text-red-900 mb-3 flex items-center gap-2">
-          Risiko Kesehatan
+            Risiko Kesehatan
           </h3>
           <ul class="space-y-2">
-            <li v-for="(risk, index) in foodStore.dailyAnalysis.risks" :key="index"
-                class="flex items-start gap-2 text-slate-700">
+            <li
+              v-for="(risk, index) in foodStore.dailyAnalysis.risks"
+              :key="index"
+              class="flex items-start gap-2 text-slate-700"
+            >
               <span class="text-red-600 font-bold">•</span>
               <span>{{ risk }}</span>
             </li>
@@ -258,14 +249,17 @@
         </div>
 
         <!-- Warnings -->
-        <div v-if="foodStore.dailyAnalysis.warnings && foodStore.dailyAnalysis.warnings.length > 0"
-             class="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-2xl p-6">
-          <h3 class="text-xl font-bold text-amber-900 mb-3 flex items-center gap-2">
-          Peringatan
-          </h3>
+        <div
+          v-if="foodStore.dailyAnalysis.warnings && foodStore.dailyAnalysis.warnings.length > 0"
+          class="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-2xl p-6"
+        >
+          <h3 class="text-xl font-bold text-amber-900 mb-3 flex items-center gap-2">Peringatan</h3>
           <ul class="space-y-2">
-            <li v-for="(warning, index) in foodStore.dailyAnalysis.warnings" :key="index"
-                class="flex items-start gap-2 text-slate-700">
+            <li
+              v-for="(warning, index) in foodStore.dailyAnalysis.warnings"
+              :key="index"
+              class="flex items-start gap-2 text-slate-700"
+            >
               <span class="text-amber-600 font-bold">•</span>
               <span>{{ warning }}</span>
             </li>
@@ -273,10 +267,12 @@
         </div>
 
         <!-- Diet Suitability -->
-        <div v-if="foodStore.dailyAnalysis.dietSuitability"
-             class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6">
+        <div
+          v-if="foodStore.dailyAnalysis.dietSuitability"
+          class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6"
+        >
           <h3 class="text-xl font-bold text-purple-900 mb-3 flex items-center gap-2">
-          Kesesuaian Diet
+            Kesesuaian Diet
           </h3>
           <p class="text-slate-700 leading-relaxed">
             {{ foodStore.dailyAnalysis.dietSuitability }}
@@ -284,14 +280,20 @@
         </div>
 
         <!-- Recommendations -->
-        <div v-if="foodStore.dailyAnalysis.recommendations && foodStore.dailyAnalysis.recommendations.length > 0"
-             class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6">
-          <h3 class="text-xl font-bold text-green-900 mb-3 flex items-center gap-2">
-          Rekomendasi
-          </h3>
+        <div
+          v-if="
+            foodStore.dailyAnalysis.recommendations &&
+            foodStore.dailyAnalysis.recommendations.length > 0
+          "
+          class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6"
+        >
+          <h3 class="text-xl font-bold text-green-900 mb-3 flex items-center gap-2">Rekomendasi</h3>
           <ul class="space-y-2">
-            <li v-for="(rec, index) in foodStore.dailyAnalysis.recommendations" :key="index"
-                class="flex items-start gap-2 text-slate-700">
+            <li
+              v-for="(rec, index) in foodStore.dailyAnalysis.recommendations"
+              :key="index"
+              class="flex items-start gap-2 text-slate-700"
+            >
               <span class="text-green-600 font-bold">✓</span>
               <span>{{ rec }}</span>
             </li>
@@ -299,8 +301,10 @@
         </div>
 
         <!-- Disclaimer -->
-        <div v-if="foodStore.dailyAnalysis.disclaimer"
-             class="bg-slate-100 rounded-2xl p-4 border-l-4 border-slate-400">
+        <div
+          v-if="foodStore.dailyAnalysis.disclaimer"
+          class="bg-slate-100 rounded-2xl p-4 border-l-4 border-slate-400"
+        >
           <p class="text-sm text-slate-600 italic">
             <span class="font-semibold">Disclaimer:</span> {{ foodStore.dailyAnalysis.disclaimer }}
           </p>
@@ -309,9 +313,7 @@
 
       <!-- Empty State (belum ada analisis) -->
       <div v-else class="text-center py-12">
-        <p class="text-lg text-slate-600">
-          Belum ada analisis untuk hari ini
-        </p>
+        <p class="text-lg text-slate-600">Belum ada analisis untuk hari ini</p>
         <p class="text-sm text-slate-500 mt-2">
           Tambahkan makanan ke jurnal Anda untuk mendapatkan analisis AI
         </p>
@@ -337,7 +339,7 @@ const deleteConfirm = ref({
   show: false,
   foodId: null,
   foodName: '',
-  loading: false
+  loading: false,
 })
 
 // Lifecycle hook: Dijalankan saat komponen pertama kali di-mount
@@ -358,7 +360,7 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error saat mount dashboard:', error)
     toast.error('Gagal memuat data', {
-      description: 'Terjadi kesalahan saat mengambil data'
+      description: 'Terjadi kesalahan saat mengambil data',
     })
   }
 })
@@ -401,11 +403,10 @@ const summaryData = computed(() => ({
   },
   garam: {
     label: 'Garam',
-    value: normalizeSaltDisplay(foodStore.totals.salt || 0).value,
+    value: Math.round(foodStore.totals.salt || 0),
     max: (() => {
       const meta = authStore.user?.user_metadata || {}
-      const pref = meta.dailySodiumGoal || meta.dailySaltGoal || 2000
-      return normalizeSaltDisplay(pref).value
+      return meta.dailySodiumGoal || meta.dailySaltGoal || 2000
     })(),
     unit: 'mg',
     class: 'garam',
@@ -429,7 +430,7 @@ const handleDelete = (foodId, foodName) => {
     show: true,
     foodId: foodId,
     foodName: foodName,
-    loading: false
+    loading: false,
   }
 }
 
@@ -438,7 +439,7 @@ const cancelDelete = () => {
     show: false,
     foodId: null,
     foodName: '',
-    loading: false
+    loading: false,
   }
 }
 
@@ -454,7 +455,6 @@ const executeDelete = async () => {
     setTimeout(async () => {
       await foodStore.fetchDailyAnalysis()
     }, 500)
-
   } catch (error) {
     cancelDelete()
     console.error('Error saat menghapus:', error)

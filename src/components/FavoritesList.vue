@@ -228,6 +228,14 @@ const quickAdd = async (fav) => {
   addingId.value = fav._id
 
   try {
+    const saltValue =
+      fav.product.nutriments?.salt_100g ||
+      fav.product.nutriments?.sodium_100g ||
+      fav.product.nutriments?.salt ||
+      0
+
+    const saltInMg = saltValue < 100 ? saltValue * 1000 : saltValue
+
     const foodData = {
       productName: fav.product.product_name || 'Tanpa Nama',
       barcode: fav.productCode,
@@ -236,7 +244,7 @@ const quickAdd = async (fav) => {
       carbs: fav.product.nutriments?.carbohydrates_100g || 0,
       fat: fav.product.nutriments?.fat_100g || 0,
       sugar: fav.product.nutriments?.sugars_100g || 0,
-      salt: fav.product.nutriments?.salt_100g || 0,
+      salt: saltInMg,
       imageUrl: fav.product.image_small_url || fav.product.image_url,
     }
 

@@ -544,6 +544,8 @@ const saveToJournal = async () => {
   isSaving.value = true
 
   try {
+    const saltValue = analysisResult.value.salt || 0
+    const saltInMg = saltValue < 100 ? saltValue * 1000 : saltValue
     const foodData = {
       productName: analysisResult.value.description || 'Makanan dari Foto AI',
       calories: analysisResult.value.calories || 0,
@@ -551,7 +553,7 @@ const saveToJournal = async () => {
       carbs: analysisResult.value.carbs || 0,
       fat: analysisResult.value.fat || 0,
       sugar: analysisResult.value.sugar || 0,
-      salt: analysisResult.value.salt || 0,
+      salt: saltInMg,
       imageUrl: capturedImage.value,
       source: 'ai_vision',
     }
