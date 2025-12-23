@@ -4,21 +4,28 @@
     <button
       v-if="!isOpen"
       @click="toggleChat"
-      class="w-15 h-15 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-lg flex items-center justify-center hover:scale-110 transition-transform duration-200"
+      class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-lg flex items-center justify-center hover:scale-110 transition-transform duration-200 animate-pulse-soft"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-      </svg>
+      <div class="relative">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="animate-bounce-gentle"
+        >
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        <span
+          class="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-ping"
+        ></span>
+        <span class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full"></span>
+      </div>
     </button>
 
     <!-- Chat Window -->
@@ -249,7 +256,35 @@ export default {
   }
 }
 
+@keyframes pulseSoft {
+  0%,
+  100% {
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5);
+  }
+  50% {
+    box-shadow: 0 10px 40px rgba(59, 130, 246, 0.7);
+  }
+}
+
+@keyframes bounceGentle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
 .animate-slideIn {
   animation: slideIn 0.3s ease;
+}
+
+.animate-pulse-soft {
+  animation: pulseSoft 2s ease-in-out infinite;
+}
+
+.animate-bounce-gentle {
+  animation: bounceGentle 2s ease-in-out infinite;
 }
 </style>
