@@ -1,50 +1,58 @@
 <template>
   <header class="fixed top-0 left-0 right-0 bg-blue-600 text-white shadow-md z-50">
-    <div class="flex items-center justify-between px-4 py-4 md:px-6 md:py-7">
+    <div class="flex items-center justify-between px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-7">
       <div class="flex items-center space-x-2 md:space-x-3">
-        <router-link to="/" class="flex items-center space-x-2">
+        <router-link to="/" class="flex items-center space-x-1.5 sm:space-x-2">
           <div
-            class="bg-white text-blue-600 font-bold text-base md:text-lg px-2 py-1 md:px-3 rounded-lg"
+            class="bg-white text-blue-600 font-bold text-sm sm:text-base md:text-lg px-1.5 py-0.5 sm:px-2 sm:py-1 md:px-3 rounded-lg"
           >
             SB
           </div>
-          <span class="font-semibold text-lg md:text-xl">ScanBar</span>
+          <span class="font-semibold text-base sm:text-lg md:text-xl">ScanBar</span>
         </router-link>
       </div>
 
-      <!-- button menu untuk tampilan mobile -->
-      <button class="md:hidden focus:outline-none flex items-center" @click="toggleMenu">
-        <svg
-          v-if="!isMenuOpen"
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6 md:h-7 md:w-7"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+      <!-- User name dan button menu untuk tampilan mobile -->
+      <div class="md:hidden flex items-center gap-2">
+        <span
+          v-if="authStore.isAuthenticated"
+          class="text-xs sm:text-sm text-white/90 truncate max-w-[140px] sm:max-w-[180px]"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16"
-          />
-        </svg>
-        <svg
-          v-else
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6 md:h-7 md:w-7"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
+          Halo, {{ authStore.userFullName }}
+        </span>
+        <button class="focus:outline-none flex items-center p-1" @click="toggleMenu">
+          <svg
+            v-if="!isMenuOpen"
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 sm:h-7 sm:w-7"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+          <svg
+            v-else
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 sm:h-7 sm:w-7"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
 
       <!-- navbar untuk tampilan desktop -->
       <nav class="hidden md:flex items-center space-x-5">
@@ -119,11 +127,11 @@
     <transition name="slide-fade">
       <div
         v-if="isMenuOpen"
-        class="md:hidden bg-blue-600 border-t border-white/20 px-4 py-3 space-y-3 shadow-inner"
+        class="md:hidden bg-blue-600 border-t border-white/20 px-3 sm:px-4 py-3 space-y-2 shadow-inner"
       >
         <router-link
           to="/"
-          class="block bg-white/10 hover:bg-blue-500 text-white font-semibold px-4 py-2 rounded-md"
+          class="block bg-white/10 hover:bg-blue-500 text-white font-semibold px-3 py-2 rounded-md text-sm sm:text-base"
           active-class="bg-white !text-blue-600"
           @click="closeMenu"
           >Home</router-link
@@ -132,35 +140,35 @@
         <template v-if="authStore.isAuthenticated">
           <router-link
             to="/dashboard"
-            class="block px-4 py-2 hover:bg-blue-500 rounded-md transition"
+            class="block px-3 py-2 hover:bg-blue-500 rounded-md transition text-sm sm:text-base"
             active-class="bg-white text-blue-600 font-semibold"
             @click="closeMenu"
             >Dashboard</router-link
           >
           <router-link
             to="/calculator"
-            class="block px-4 py-2 hover:bg-blue-500 rounded-md transition"
+            class="block px-3 py-2 hover:bg-blue-500 rounded-md transition text-sm sm:text-base"
             active-class="bg-white text-blue-600 font-semibold"
             @click="closeMenu"
             >Kalkulator</router-link
           >
           <router-link
             to="/photo-scan"
-            class="block px-4 py-2 hover:bg-blue-500 rounded-md transition"
+            class="block px-3 py-2 hover:bg-blue-500 rounded-md transition text-sm sm:text-base"
             active-class="bg-white text-blue-600 font-semibold"
             @click="closeMenu"
             >Scan Makanan</router-link
           >
           <router-link
             to="/profile"
-            class="block px-4 py-2 hover:bg-blue-500 rounded-md transition"
+            class="block px-3 py-2 hover:bg-blue-500 rounded-md transition text-sm sm:text-base"
             active-class="bg-white text-blue-600 font-semibold"
             @click="closeMenu"
             >Profil</router-link
           >
           <a
             @click="handleLogout"
-            class="block bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md cursor-pointer font-bold mt-4 text-center"
+            class="block bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md cursor-pointer font-bold mt-3 text-center text-sm sm:text-base"
             >Logout</a
           >
         </template>
@@ -168,14 +176,14 @@
         <template v-else>
           <router-link
             to="/login"
-            class="block px-4 py-2 hover:bg-blue-500 rounded-md transition"
+            class="block px-3 py-2 hover:bg-blue-500 rounded-md transition text-sm sm:text-base"
             active-class="bg-white text-blue-600 font-semibold"
             @click="closeMenu"
             >Login</router-link
           >
           <router-link
             to="/register"
-            class="block px-4 py-2 hover:bg-blue-500 rounded-md transition"
+            class="block px-3 py-2 hover:bg-blue-500 rounded-md transition text-sm sm:text-base"
             active-class="bg-white text-blue-600 font-semibold"
             @click="closeMenu"
             >Register</router-link
