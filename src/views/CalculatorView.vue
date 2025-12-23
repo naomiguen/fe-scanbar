@@ -117,16 +117,16 @@
           <!-- Results Display -->
           <div v-if="results" class="space-y-6">
             <!-- TDEE Card -->
-            <div class="bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-3xl p-8 md:p-10 text-center shadow-xl">
+            <div
+              class="bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-3xl p-8 md:p-10 text-center shadow-xl"
+            >
               <p class="text-sm md:text-base font-semibold mb-3 text-blue-100">
                 Kebutuhan Kalori Harian Anda
               </p>
               <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-3">
                 {{ results.tdee }}
               </h1>
-              <p class="text-sm md:text-base font-semibold text-blue-100">
-                kalori per hari
-              </p>
+              <p class="text-sm md:text-base font-semibold text-blue-100">kalori per hari</p>
             </div>
 
             <!-- Makronutrien -->
@@ -137,33 +137,53 @@
 
               <div class="space-y-3">
                 <!-- Karbohidrat -->
-                <div class="bg-green-100 border-2 border-green-300 rounded-xl p-4 flex justify-between items-center">
+                <div
+                  class="bg-green-100 border-2 border-green-300 rounded-xl p-4 flex justify-between items-center"
+                >
                   <span class="font-bold text-green-800 text-base md:text-lg">Karbohidrat</span>
-                  <span class="font-bold text-green-800 text-base md:text-lg">{{ results.carbs }} g</span>
+                  <span class="font-bold text-green-800 text-base md:text-lg"
+                    >{{ results.carbs }} g</span
+                  >
                 </div>
 
                 <!-- Protein -->
-                <div class="bg-orange-100 border-2 border-orange-300 rounded-xl p-4 flex justify-between items-center">
+                <div
+                  class="bg-orange-100 border-2 border-orange-300 rounded-xl p-4 flex justify-between items-center"
+                >
                   <span class="font-bold text-orange-800 text-base md:text-lg">Protein</span>
-                  <span class="font-bold text-orange-800 text-base md:text-lg">{{ results.protein }} g</span>
+                  <span class="font-bold text-orange-800 text-base md:text-lg"
+                    >{{ results.protein }} g</span
+                  >
                 </div>
 
                 <!-- Lemak -->
-                <div class="bg-amber-100 border-2 border-amber-300 rounded-xl p-4 flex justify-between items-center">
+                <div
+                  class="bg-amber-100 border-2 border-amber-300 rounded-xl p-4 flex justify-between items-center"
+                >
                   <span class="font-bold text-amber-800 text-base md:text-lg">Lemak</span>
-                  <span class="font-bold text-amber-800 text-base md:text-lg">{{ results.fat }} g</span>
+                  <span class="font-bold text-amber-800 text-base md:text-lg"
+                    >{{ results.fat }} g</span
+                  >
                 </div>
 
                 <!-- Gula -->
-                <div class="bg-purple-100 border-2 border-purple-300 rounded-xl p-4 flex justify-between items-center">
+                <div
+                  class="bg-purple-100 border-2 border-purple-300 rounded-xl p-4 flex justify-between items-center"
+                >
                   <span class="font-bold text-purple-800 text-base md:text-lg">Gula</span>
-                  <span class="font-bold text-purple-800 text-base md:text-lg">{{ results.sugar }} g</span>
+                  <span class="font-bold text-purple-800 text-base md:text-lg"
+                    >{{ results.sugar }} g</span
+                  >
                 </div>
 
                 <!-- Garam -->
-                <div class="bg-slate-100 border-2 border-slate-300 rounded-xl p-4 flex justify-between items-center">
+                <div
+                  class="bg-slate-100 border-2 border-slate-300 rounded-xl p-4 flex justify-between items-center"
+                >
                   <span class="font-bold text-slate-800 text-base md:text-lg">Garam</span>
-                  <span class="font-bold text-slate-800 text-base md:text-lg">{{ results.salt }} g</span>
+                  <span class="font-bold text-slate-800 text-base md:text-lg"
+                    >{{ results.salt }} g</span
+                  >
                 </div>
               </div>
             </div>
@@ -210,12 +230,8 @@
       <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full animate-scale-in">
         <!-- Icon Info -->
         <div class="text-center mb-6">
-          <h3 class="text-2xl font-bold text-slate-900 mb-2">
-            Simpan Target Nutrisi?
-          </h3>
-          <p class="text-slate-600 mb-4">
-            Data berikut akan disimpan ke profil Anda:
-          </p>
+          <h3 class="text-2xl font-bold text-slate-900 mb-2">Simpan Target Nutrisi?</h3>
+          <p class="text-slate-600 mb-4">Data berikut akan disimpan ke profil Anda:</p>
 
           <!-- Data Summary -->
           <div class="bg-slate-50 rounded-xl p-4 text-left space-y-2 mb-4">
@@ -302,7 +318,7 @@ const isSaving = ref(false)
 
 // State untuk modal konfirmasi simpan
 const saveConfirm = ref({
-  show: false,  // Status tampilan modal
+  show: false, // Status tampilan modal
 })
 
 /**
@@ -314,7 +330,7 @@ const calculateTDEE = () => {
   // Validasi: Pastikan semua field sudah diisi
   if (!form.value.age || !form.value.weight || !form.value.height) {
     toast.error('Data Tidak Lengkap', {
-      description: 'Mohon lengkapi semua data dengan benar!'
+      description: 'Mohon lengkapi semua data dengan benar!',
     })
     return
   }
@@ -336,16 +352,16 @@ const calculateTDEE = () => {
   // Lemak: 30% dari TDEE, 1g lemak = 9 kalori
   results.value = {
     tdee,
-    carbs: Math.round((tdee * 0.5) / 4),
+    carbs: Math.round((tdee * 0.55) / 4),
     protein: Math.round((tdee * 0.2) / 4),
-    fat: Math.round((tdee * 0.3) / 9),
+    fat: Math.round((tdee * 0.25) / 9),
     sugar: Math.round((tdee * 0.05) / 4),
-    salt: 5,   // Batas maksimal WHO: < 5g per hari
+    salt: 5, // Batas maksimal WHO: < 5g per hari
   }
   // Tampilkan notifikasi sukses
   toast.success('Perhitungan Berhasil!', {
     description: `Kebutuhan kalori harian Anda adalah ${tdee} kcal`,
-    duration: 2000
+    duration: 2000,
   })
 }
 
@@ -405,15 +421,14 @@ const executeSave = async () => {
     // Tampilkan notifikasi sukses
     toast.success('Berhasil Disimpan!', {
       description: 'Target nutrisi Anda telah diperbarui di profil.',
-      duration: 3000
+      duration: 3000,
     })
-
   } catch (error) {
     // Tampilkan notifikasi error jika gagal
     console.error('Error saat menyimpan target:', error)
     toast.error('Gagal Menyimpan', {
       description: error.message || 'Terjadi kesalahan saat menyimpan target nutrisi.',
-      duration: 3000
+      duration: 3000,
     })
   } finally {
     // Reset loading state
@@ -468,13 +483,13 @@ select:hover {
 }
 
 /* Hapus spinner pada input number */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-input[type="number"] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
 </style>

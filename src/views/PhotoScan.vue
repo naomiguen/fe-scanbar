@@ -481,14 +481,14 @@ const analyzeImage = async () => {
       )
 
       clearTimeout(timeoutId)
-      console.log('✅ Backend response:', response.data)
+      console.log('Backend response:', response.data)
 
       analysisResult.value = response.data
 
       showNotification(
         'success',
         'Analisis Selesai!',
-        'AI berhasil menganalisis kandungan nutrisi makanan Anda'
+        'Berhasil menganalisis kandungan nutrisi makanan Anda'
       )
     } catch (error) {
       clearTimeout(timeoutId)
@@ -503,7 +503,7 @@ const analyzeImage = async () => {
       throw error
     }
   } catch (error) {
-    console.error('❌ Error analyzing image:', error)
+    console.error('Error analyzing image:', error)
 
     let errorMessage = 'Terjadi kesalahan saat menganalisis gambar.'
     let errorDetail = error.response?.data?.error || error.message || 'Silakan coba lagi'
@@ -574,7 +574,7 @@ const saveToJournal = async () => {
       router.push('/dashboard')
     }, 2000)
   } catch (error) {
-    console.error('❌ Error saving to journal:', error)
+    console.error('Error saving to journal:', error)
 
     showNotification(
       'error',
