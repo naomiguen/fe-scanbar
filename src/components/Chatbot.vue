@@ -31,7 +31,7 @@
     <!-- Chat Window -->
     <div
       v-if="isOpen"
-      class="w-96 h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden max-[480px]:w-screen max-[480px]:h-screen max-[480px]:rounded-none"
+      class="w-96 h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden max-[480px]:w-[calc(100vw-2rem)] max-[480px]:h-[500px] max-[480px]:rounded-2xl"
     >
       <!-- Header -->
       <div
