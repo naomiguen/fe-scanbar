@@ -204,7 +204,12 @@ const errorMessage = ref(null)
  */
 const closeSuccessModal = () => {
   showSuccessModal.value = false
-  router.push('/')
+
+  if (authStore.isAdmin) {
+    router.push('/admin')
+  } else {
+    router.push('/dashboard')
+  }
 }
 
 /**

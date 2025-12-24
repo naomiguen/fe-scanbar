@@ -110,7 +110,7 @@ export const useAuthStore = defineStore('auth', () => {
             id: data.user.id,
             email: email,
             name: name,
-            role: 'user',
+            role: user,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           })
@@ -156,15 +156,16 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = data.user
 
       //  Set loaded true BEFORE fetching untuk unblock router
-      isProfileLoaded.value = true
+      isProfileLoaded.value = false
       await fetchUserProfile()
+      isProfileLoaded.value = true
 
       console.log('Login success, role:', role.value, 'isAdmin:', isAdmin.value)
 
-      // Redirect based on role
-      const targetRoute = isAdmin.value ? '/admin' : '/'
-      await new Promise((resolve) => setTimeout(resolve, 100))
-      router.push(targetRoute)
+      // // Redirect based on role
+      // const targetRoute = isAdmin.value ? '/admin' : '/dashboard'
+      // await new Promise((resolve) => setTimeout(resolve, 150))
+      // router.push(targetRoute)
 
       toast.success('Login Berhasil!', {
         description: `Selamat datang, ${userFullName.value}!`,
@@ -213,7 +214,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   /**
-   * FETCH USER PROFILE - Optimized for non-blocking
+   * FETCH USER PROFILE
    */
   async function fetchUserProfile() {
     if (!user.value) {
@@ -222,9 +223,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     try {
-      // CRITICAL: Set true FIRST supaya router tidak blocking!
-      isProfileLoaded.value = true
-
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -247,10 +245,13 @@ export const useAuthStore = defineStore('auth', () => {
 
       profile.value = data
       const rawRole = data.role || 'user'
-      role.value = String(rawRole).trim().toLowerCase()
+      const cleanedRole = String(rawRole).replace(/['"]+/g, '').trim().toLowerCase()
+      role.value = cleanedRole
 
       console.log('Profile loaded:', {
         userId: user.value.id,
+        rawRole: rawRole,
+        cleanedRole: cleanedRole,
         role: role.value,
         isAdmin: isAdmin.value,
       })
@@ -423,8 +424,15 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = newSession?.user || null
 
         if (newSession) {
-          isProfileLoaded.value = true
-          await fetchUserProfile()
+          // Load profile dan tunggu selesai
+          try {
+            await fetchUserProfile()
+            isProfileLoaded.value = true
+          } catch (err) {
+            console.error('Background profile fetch failed:', err)
+            isProfileLoaded.value = true
+            role.value = 'user'
+          }
         } else {
           profile.value = null
           role.value = 'user'
