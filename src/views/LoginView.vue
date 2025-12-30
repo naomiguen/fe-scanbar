@@ -256,8 +256,8 @@ const handleLogin = async () => {
   } catch (error) {
     // Handle error yang tidak terduga
     console.error('Login error:', error)
-    errorMessage.value = 'Terjadi kesalahan. Silakan coba lagi.'
-    toast.error('Terjadi kesalahan. Silakan coba lagi.')
+    errorMessage.value = 'Email atau password salah. Silakan coba lagi.'
+    toast.error('Email atau password salah')
   } finally {
     // Reset loading state
     isLoading.value = false

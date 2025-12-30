@@ -46,8 +46,18 @@
                 v-model.number="form.age"
                 placeholder="Masukkan usia (tahun)"
                 required
+                min="1"
+                max="120"
+                step="1"
+                @input="validateAge"
                 class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-base focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 transition-all duration-300"
+                :class="{
+                  'border-red-500 focus:border-red-500 focus:ring-red-500/10': validationErrors.age,
+                }"
               />
+              <p v-if="validationErrors.age" class="text-red-600 text-sm mt-1">
+                {{ validationErrors.age }}
+              </p>
             </div>
 
             <!-- Berat Badan -->
@@ -60,8 +70,19 @@
                 v-model.number="form.weight"
                 placeholder="Masukkan berat badan (kg)"
                 required
+                min="20"
+                max="500"
+                step="0.1"
+                @input="validateWeight"
                 class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-base focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 transition-all duration-300"
+                :class="{
+                  'border-red-500 focus:border-red-500 focus:ring-red-500/10':
+                    validationErrors.weight,
+                }"
               />
+              <p v-if="validationErrors.weight" class="text-red-600 text-sm mt-1">
+                {{ validationErrors.weight }}
+              </p>
             </div>
 
             <!-- Tinggi Badan -->
@@ -74,8 +95,19 @@
                 v-model.number="form.height"
                 placeholder="Masukkan tinggi badan (cm)"
                 required
+                min="50"
+                max="300"
+                step="0.1"
+                @input="validateHeight"
                 class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-base focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 transition-all duration-300"
+                :class="{
+                  'border-red-500 focus:border-red-500 focus:ring-red-500/10':
+                    validationErrors.height,
+                }"
               />
+              <p v-if="validationErrors.height" class="text-red-600 text-sm mt-1">
+                {{ validationErrors.height }}
+              </p>
             </div>
 
             <!-- Tingkat Aktivitas -->
@@ -291,6 +323,31 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal Sukses -->
+    <div
+      v-if="successModal.show"
+      class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+      @click.self="closeSuccessModal"
+    >
+      <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full animate-scale-in text-center">
+        <!-- Icon Success -->
+
+        <!-- Judul -->
+        <h3 class="text-2xl font-bold text-slate-900 mb-2">Berhasil Diupdate!</h3>
+
+        <!-- Deskripsi -->
+        <p class="text-slate-600 mb-6">Target nutrisi Anda telah berhasil disimpan di profil</p>
+
+        <!-- Tombol Lanjutkan -->
+        <button
+          @click="closeSuccessModal"
+          class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 hover:scale-105"
+        >
+          Lanjutkan
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -321,6 +378,79 @@ const saveConfirm = ref({
   show: false, // Status tampilan modal
 })
 
+// State untuk modal sukses
+const successModal = ref({
+  show: false,
+})
+
+// State untuk menyimpan error validasi
+const validationErrors = ref({
+  age: '',
+  weight: '',
+  height: '',
+})
+
+/**
+ * Function: validateAge
+ * Validasi input usia agar masuk akal
+ */
+const validateAge = (event) => {
+  const value = parseFloat(event.target.value)
+
+  if (value < 0) {
+    form.value.age = 0
+    validationErrors.value.age = 'Nilai tidak boleh negatif'
+  } else if (value > 120) {
+    validationErrors.value.age = 'Usia maksimal 120 tahun'
+  } else if (value === 0) {
+    validationErrors.value.age = 'Usia tidak boleh 0'
+  } else {
+    validationErrors.value.age = ''
+  }
+}
+
+/**
+ * Function: validateWeight
+ * Validasi input berat badan agar masuk akal
+ */
+const validateWeight = (event) => {
+  const value = parseFloat(event.target.value)
+
+  if (value < 0) {
+    form.value.weight = 0
+    validationErrors.value.weight = 'Nilai tidak boleh negatif'
+  } else if (value === 0) {
+    validationErrors.value.weight = 'Berat badan tidak boleh 0'
+  } else if (value < 20) {
+    validationErrors.value.weight = 'Berat badan minimal 20 kg'
+  } else if (value > 500) {
+    validationErrors.value.weight = 'Berat badan maksimal 500 kg'
+  } else {
+    validationErrors.value.weight = ''
+  }
+}
+
+/**
+ * Function: validateHeight
+ * Validasi input tinggi badan agar masuk akal
+ */
+const validateHeight = (event) => {
+  const value = parseFloat(event.target.value)
+
+  if (value < 0) {
+    form.value.height = 0
+    validationErrors.value.height = 'Nilai tidak boleh negatif'
+  } else if (value === 0) {
+    validationErrors.value.height = 'Tinggi badan tidak boleh 0'
+  } else if (value < 50) {
+    validationErrors.value.height = 'Tinggi badan minimal 50 cm'
+  } else if (value > 300) {
+    validationErrors.value.height = 'Tinggi badan maksimal 300 cm'
+  } else {
+    validationErrors.value.height = ''
+  }
+}
+
 /**
  * Function: calculateTDEE
  * Menghitung Total Daily Energy Expenditure (TDEE) dan rekomendasi makronutrien
@@ -331,6 +461,40 @@ const calculateTDEE = () => {
   if (!form.value.age || !form.value.weight || !form.value.height) {
     toast.error('Data Tidak Lengkap', {
       description: 'Mohon lengkapi semua data dengan benar!',
+    })
+    return
+  }
+
+  // Validasi: Cek apakah ada error validasi
+  if (
+    validationErrors.value.age ||
+    validationErrors.value.weight ||
+    validationErrors.value.height
+  ) {
+    toast.error('Data Tidak Valid', {
+      description: 'Mohon perbaiki data yang tidak valid!',
+    })
+    return
+  }
+
+  // Validasi tambahan untuk nilai yang masuk akal
+  if (form.value.age <= 0 || form.value.age > 120) {
+    toast.error('Usia Tidak Valid', {
+      description: 'Usia harus antara 1-120 tahun',
+    })
+    return
+  }
+
+  if (form.value.weight <= 0 || form.value.weight < 20 || form.value.weight > 500) {
+    toast.error('Berat Badan Tidak Valid', {
+      description: 'Berat badan harus antara 20-500 kg',
+    })
+    return
+  }
+
+  if (form.value.height <= 0 || form.value.height < 50 || form.value.height > 300) {
+    toast.error('Tinggi Badan Tidak Valid', {
+      description: 'Tinggi badan harus antara 50-300 cm',
     })
     return
   }
@@ -347,9 +511,10 @@ const calculateTDEE = () => {
   const tdee = Math.round(bmr * form.value.activityLevel)
 
   // Hitung rekomendasi makronutrien berdasarkan TDEE
-  // Karbohidrat: 50% dari TDEE, 1g karbo = 4 kalori
+  // Karbohidrat: 55% dari TDEE, 1g karbo = 4 kalori
   // Protein: 20% dari TDEE, 1g protein = 4 kalori
-  // Lemak: 30% dari TDEE, 1g lemak = 9 kalori
+  // Lemak: 25% dari TDEE, 1g lemak = 9 kalori
+  // Gula: 5% dari TDEE, 1g gula = 4 kalori
   results.value = {
     tdee,
     carbs: Math.round((tdee * 0.55) / 4),
@@ -415,14 +580,11 @@ const executeSave = async () => {
     // Panggil fungsi updateProfile dari authStore
     await authStore.updateProfile(dataToSave)
 
-    // Tutup modal setelah berhasil
+    // Tutup modal konfirmasi
     cancelSave()
 
-    // Tampilkan notifikasi sukses
-    toast.success('Berhasil Disimpan!', {
-      description: 'Target nutrisi Anda telah diperbarui di profil.',
-      duration: 3000,
-    })
+    // Tampilkan modal sukses
+    successModal.value.show = true
   } catch (error) {
     // Tampilkan notifikasi error jika gagal
     console.error('Error saat menyimpan target:', error)
@@ -434,6 +596,14 @@ const executeSave = async () => {
     // Reset loading state
     isSaving.value = false
   }
+}
+
+/**
+ * Function: closeSuccessModal
+ * Menutup modal sukses
+ */
+const closeSuccessModal = () => {
+  successModal.value.show = false
 }
 </script>
 
